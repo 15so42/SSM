@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.UserDao">
+    <resultMap id="BaseResultMap" type="pojo.User">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="userCode" jdbcType="VARCHAR" property="usercode" />
+        <result column="userName" jdbcType="VARCHAR" property="username" />
+        <result column="userPassword" jdbcType="VARCHAR" property="userpassword" />
+        <result column="gender" jdbcType="INTEGER" property="gender" />
+        <result column="birthday" jdbcType="DATE" property="birthday" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="userRole" jdbcType="BIGINT" property="userrole" />
+        <result column="createdBy" jdbcType="BIGINT" property="createdby" />
+        <result column="creationDate" jdbcType="TIMESTAMP" property="creationdate" />
+        <result column="modifyBy" jdbcType="BIGINT" property="modifyby" />
+        <result column="modifyDate" jdbcType="TIMESTAMP" property="modifydate" />
+    </resultMap>
+    <select id="getUserList"  resultMap="BaseResultMap">
+        select * from smbms_user
+    </select>
+
+    <select id="login"  resultMap="BaseResultMap" >
+  select * from smbms_user where userCode = #{userCode} AND userPassword = #{userPassword}
+  </select>
+</mapper>
