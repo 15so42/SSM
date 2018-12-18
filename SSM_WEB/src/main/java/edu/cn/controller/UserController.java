@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import pojo.User;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.logging.Logger;
 
 @Controller
@@ -23,20 +25,27 @@ public class UserController {
     }
 
     @RequestMapping(value="/dologin.html",method = RequestMethod.POST)
-    public String doLogin(@RequestParam String userCode, @RequestParam String userPassword)
+    public String doLogin(@RequestParam String userCode, @RequestParam String userPassword, HttpServletRequest request, HttpSession session)
     {
         System.out.println("DoLogin");
         User user=userService.login(userCode,userPassword);
-        if(user!=null)
+        if(user!=null){
+            session.setAttribute("USER_SESSION",user);
             return "redirect:/user/main.html";
-        else
+        }
+        else{
+            request.setAttribute("error","用戶名或密碼不正确");
             return "login";
+        }
 
 
     }
 
     @RequestMapping(value="/main.html")
-    public String main(){
+    public String main(HttpSession session){
+        if(session.getAttribute("USER_SESSION")==null){
+            return "redirect:/user/login.html";
+        }
         return "frame";
     }
 

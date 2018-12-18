@@ -5,7 +5,7 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>系统登录 - 超市订单管理系统</title>
-    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath }/statics/css/style.css" />
+    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/statics/css/style.css" />
     <script type="text/javascript">
 	/* if(top.location!=self.location){
 	      top.location=self.location;
@@ -15,7 +15,7 @@
 <body class="login_bg">
     <section class="loginBox">
         <header class="loginHeader">
-            <h1>超市订单管理系统</h1>
+            <h1>超市订单管理系统${pageContext.request.contextPath }</h1>
         </header>
         <section class="loginCont">
 	        <form class="loginForm" action="${pageContext.request.contextPath }/user/dologin.html"  name="actionForm" id="actionForm"  method="post" >
