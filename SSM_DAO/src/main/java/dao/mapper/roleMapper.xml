@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.RoleDao">
+    <resultMap id="BaseResultMap" type="pojo.Role">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="roleCode" jdbcType="VARCHAR" property="roleCode" />
+        <result column="roleName" jdbcType="VARCHAR" property="roleName" />
+        <result column="createdBy" jdbcType="BIGINT" property="createdBy" />
+        <result column="creationDate" jdbcType="TIMESTAMP" property="creationDate" />
+        <result column="modifyBy" jdbcType="BIGINT" property="modifyBy" />
+        <result column="modifyDate" jdbcType="TIMESTAMP" property="modifyDate" />
+    </resultMap>
+   <select id="getRoleList" resultMap="BaseResultMap">
+       select id,roleCode,roleName,createdBy,creationDate,modifyBy,modifyDate from smbms_role
+   </select>
+</mapper>

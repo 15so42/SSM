@@ -4,18 +4,18 @@
 <mapper namespace="dao.UserDao">
     <resultMap id="BaseResultMap" type="pojo.User">
         <id column="id" jdbcType="BIGINT" property="id" />
-        <result column="userCode" jdbcType="VARCHAR" property="usercode" />
-        <result column="userName" jdbcType="VARCHAR" property="username" />
-        <result column="userPassword" jdbcType="VARCHAR" property="userpassword" />
+        <result column="userCode" jdbcType="VARCHAR" property="userCode" />
+        <result column="userName" jdbcType="VARCHAR" property="userName" />
+        <result column="userPassword" jdbcType="VARCHAR" property="userPassword" />
         <result column="gender" jdbcType="INTEGER" property="gender" />
         <result column="birthday" jdbcType="DATE" property="birthday" />
         <result column="phone" jdbcType="VARCHAR" property="phone" />
         <result column="address" jdbcType="VARCHAR" property="address" />
-        <result column="userRole" jdbcType="BIGINT" property="userrole" />
-        <result column="createdBy" jdbcType="BIGINT" property="createdby" />
-        <result column="creationDate" jdbcType="TIMESTAMP" property="creationdate" />
-        <result column="modifyBy" jdbcType="BIGINT" property="modifyby" />
-        <result column="modifyDate" jdbcType="TIMESTAMP" property="modifydate" />
+        <result column="userRole" jdbcType="BIGINT" property="userRole" />
+        <result column="createdBy" jdbcType="BIGINT" property="createdBy" />
+        <result column="creationDate" jdbcType="TIMESTAMP" property="creationDate" />
+        <result column="modifyBy" jdbcType="BIGINT" property="modifyBy" />
+        <result column="modifyDate" jdbcType="TIMESTAMP" property="modifyDate" />
     </resultMap>
     <select id="getUserList"  resultMap="BaseResultMap">
         select * from smbms_user

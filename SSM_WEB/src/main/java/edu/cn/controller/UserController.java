@@ -1,15 +1,21 @@
 package edu.cn.controller;
 
+import Impl.RoleService;
 import Impl.UserService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import pojo.Role;
 import pojo.User;
+import tools.Constants;
+import tools.PageSupport;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Controller
@@ -18,7 +24,8 @@ public class UserController {
     Logger logger= Logger.getLogger(String.valueOf(UserController.class));
     @Resource
     private UserService userService;
-
+    @Resource
+    private RoleService roleService;
     @RequestMapping(value="/login.html")
     public String login(){
         return "login";
@@ -30,7 +37,7 @@ public class UserController {
         System.out.println("DoLogin");
         User user=userService.login(userCode,userPassword);
         if(user!=null){
-            session.setAttribute("USER_SESSION",user);
+            session.setAttribute(Constants.USER_SESSION,user);
             return "redirect:/user/main.html";
         }
         else{
@@ -43,10 +50,91 @@ public class UserController {
 
     @RequestMapping(value="/main.html")
     public String main(HttpSession session){
-        if(session.getAttribute("USER_SESSION")==null){
+        if(session.getAttribute(Constants.USER_SESSION)==null){
             return "redirect:/user/login.html";
         }
         return "frame";
+    }
+
+    @RequestMapping(value="/exlogin.html",method=RequestMethod.GET)
+    public String exLogin(@RequestParam String userCode,@RequestParam String userPassword){
+
+        //调用service方法，进行用户匹配
+        User user = userService.login(userCode,userPassword);
+        if(null == user){//登录失败
+            throw new RuntimeException("用户名或者密码不正确！");
+        }
+        return "redirect:/user/main.html";
+    }
+
+    @RequestMapping(value="/logout.html")
+    public String logout(HttpSession session){
+        //清除session
+        session.removeAttribute(Constants.USER_SESSION);
+        return "login";
+    }
+
+    //查询用户
+    @RequestMapping(value="/userlist.html")
+    public String getUserList(Model model,
+                              @RequestParam(value="queryname",required=false) String queryUserName,
+                              @RequestParam(value="queryUserRole",required=false) String queryUserRole,
+                              @RequestParam(value="pageIndex",required=false) String pageIndex){
+        logger.info("getUserList ---- > queryUserName: " + queryUserName);
+        logger.info("getUserList ---- > queryUserRole: " + queryUserRole);
+        logger.info("getUserList ---- > pageIndex: " + pageIndex);
+        int _queryUserRole = 0;
+        List<User> userList = null;
+        //设置页面容量
+        int pageSize = Constants.pageSize;
+        //当前页码
+        int currentPageNo = 1;
+
+        if(queryUserName == null){
+            queryUserName = "";
+        }
+        if(queryUserRole != null && !queryUserRole.equals("")){
+            _queryUserRole = Integer.parseInt(queryUserRole);
+        }
+
+        if(pageIndex != null){
+            try{
+                currentPageNo = Integer.valueOf(pageIndex);
+            }catch(NumberFormatException e){
+                return "redirect:/user/syserror.html";
+                //response.sendRedirect("syserror.jsp");
+            }
+        }
+        //总数量（表）
+        int totalCount	= userService.getUserCount(queryUserName,_queryUserRole);
+        //总页数
+        PageSupport pages=new PageSupport();
+        pages.setCurrentPageNo(currentPageNo);
+        pages.setPageSize(pageSize);
+        pages.setTotalCount(totalCount);
+        int totalPageCount = pages.getTotalPageCount();
+        //控制首页和尾页
+        if(currentPageNo < 1){
+            currentPageNo = 1;
+        }else if(currentPageNo > totalPageCount){
+            currentPageNo = totalPageCount;
+        }
+        userList = userService.getUserList(queryUserName,_queryUserRole,currentPageNo,pageSize);
+        model.addAttribute("userList", userList);
+        List<Role> roleList = null;
+        roleList = roleService.getRoleList();
+        model.addAttribute("roleList", roleList);
+        model.addAttribute("queryUserName", queryUserName);
+        model.addAttribute("queryUserRole", queryUserRole);
+        model.addAttribute("totalPageCount", totalPageCount);
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("currentPageNo", currentPageNo);
+        return "userlist";
+    }
+
+    @RequestMapping(value="/syserror.html")
+    public String sysError(){
+        return "syserror";
     }
 
 

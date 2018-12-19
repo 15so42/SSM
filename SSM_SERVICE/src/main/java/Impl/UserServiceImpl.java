@@ -23,5 +23,13 @@ public class UserServiceImpl implements UserService{
         return userDao.login(userCode,userPassword);
     }
 
+    public int getUserCount(String queryUserName, int _queryUserRole) {
+        return 0;
+    }
+
+    public List<User> getUserList(String queryUserName, int _queryUserRole, int currentPageNo, int pageSize) {
+        return null;
+    }
+
 
 }
