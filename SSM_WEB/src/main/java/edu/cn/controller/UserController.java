@@ -2,20 +2,24 @@ package edu.cn.controller;
 
 import Impl.RoleService;
 import Impl.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import pojo.Role;
 import pojo.User;
 import tools.Constants;
 import tools.PageSupport;
 
 import javax.annotation.Resource;
+import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @Controller
@@ -77,7 +81,7 @@ public class UserController {
     //查询用户
     @RequestMapping(value="/userlist.html")
     public String getUserList(Model model,
-                              @RequestParam(value="queryname",required=false) String queryUserName,
+                              @RequestParam(value="queryUserName",required=false) String queryUserName,
                               @RequestParam(value="queryUserRole",required=false) String queryUserRole,
                               @RequestParam(value="pageIndex",required=false) String pageIndex){
         logger.info("getUserList ---- > queryUserName: " + queryUserName);
@@ -107,6 +111,7 @@ public class UserController {
         }
         //总数量（表）
         int totalCount	= userService.getUserCount(queryUserName,_queryUserRole);
+
         //总页数
         PageSupport pages=new PageSupport();
         pages.setCurrentPageNo(currentPageNo);
@@ -122,7 +127,8 @@ public class UserController {
         userList = userService.getUserList(queryUserName,_queryUserRole,currentPageNo,pageSize);
         model.addAttribute("userList", userList);
         List<Role> roleList = null;
-        roleList = roleService.getRoleList();
+        roleList = roleService.getRoleList(queryUserName,_queryUserRole,currentPageNo);
+
         model.addAttribute("roleList", roleList);
         model.addAttribute("queryUserName", queryUserName);
         model.addAttribute("queryUserRole", queryUserRole);
@@ -136,6 +142,93 @@ public class UserController {
     public String sysError(){
         return "syserror";
     }
+
+    //==========================================================================
+    //找不到前端页面了,返回json数据
+    //==========================================================================
+
+    //使用GET方法查询所有用户
+    @RequestMapping(method=RequestMethod.GET)
+    @ResponseBody
+    public List<User> getAllUser(){
+        List<User> users=userService.getAllUser();
+        return  users;
+    }
+
+    //使用GET按照id查询用户
+    @RequestMapping(value = "/{id}",method=RequestMethod.GET)
+    @ResponseBody
+    public User getUserById(@PathVariable("id") int id){
+        User user=userService.getUserById(id);
+        return user;
+    }
+    //使用post插入用户
+    @RequestMapping(method=RequestMethod.POST)
+    @ResponseBody
+
+    public Map InsertUser(@RequestBody User user){
+        int result=userService.InsertUser(user);
+        Map<String,String> map=new HashMap<String,String>();
+        if(result==1)
+            map.put("result","插入成功");
+        else
+            map.put("result","插入失败");
+        return map;
+
+    }
+
+    //使用post路径插入简单用户
+    @RequestMapping(value="/{userCode}/{userName}/{userPassword}",method=RequestMethod.POST)
+    @ResponseBody
+    public Map InsertUserSimply(@PathVariable String userCode, @PathVariable String userName, @PathVariable String userPassword)
+    {
+        User user=new User(userCode,userName,userPassword);
+        int result=userService.InsertUser(user);
+        Map<String,String> map=new HashMap<String,String>();
+        if(result==1)
+            map.put("result","插入成功");
+        else
+            map.put("result","插入失败");
+        return map;
+
+    }
+
+    //使用put修改用户
+    @RequestMapping(value="/{id}",method=RequestMethod.PUT)
+    @ResponseBody
+    public Map update(@PathVariable int id,@RequestBody User user)
+    {
+
+        int result=userService.updateUser(id,user);
+        Map<String,String> map=new HashMap<String,String>();
+        if(result==1)
+            map.put("result","更改用户信息完成");
+        else
+            map.put("result","更改用户信息失败");
+        return map;
+
+    }
+
+    //使用delte删除用户
+    @RequestMapping(value="/{id}",method=RequestMethod.DELETE)
+    @ResponseBody
+    public Map delete(@PathVariable int id)
+    {
+
+        int result=userService.deleteUserById(id);
+        Map<String,String> map=new HashMap<String,String>();
+        if(result==1)
+            map.put("result","删除用户成功");
+        else
+            map.put("result","删除用户失败");
+        return map;
+
+    }
+
+
+
+
+
 
 
 

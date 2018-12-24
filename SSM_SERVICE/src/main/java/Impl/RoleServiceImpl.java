@@ -13,7 +13,12 @@ public class RoleServiceImpl implements  RoleService {
     @Resource
     private RoleDao roleDao;
 
-    public List<Role> getRoleList() {
-        return roleDao.getRoleList();
+
+
+    public List<Role> getRoleList(String queryUserName, int queryUserRole, int pageIndex) {
+
+            if(queryUserName.equals("")||queryUserName==null){
+                queryUserName="%";}
+             return roleDao.getRoleList(queryUserName,queryUserRole,pageIndex);
     }
 }

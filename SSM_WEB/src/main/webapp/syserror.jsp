@@ -7,10 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h1>出现错误!,以下内容为错误信息</h1>
-<h1>
-	e.message:<br> ${e.message } <br>
-	exception.message:<br>${exception.message }
-</h1>
+<h1>请登录后再访问该页面！</h1>
+<a href="${pageContext.request.contextPath }/user/login.html">返回</a>
 </body>
 </html>

@@ -16,12 +16,53 @@
         <result column="creationDate" jdbcType="TIMESTAMP" property="creationDate" />
         <result column="modifyBy" jdbcType="BIGINT" property="modifyBy" />
         <result column="modifyDate" jdbcType="TIMESTAMP" property="modifyDate" />
+        <result column="roleName" jdbcType="VARCHAR" property="userRoleName" />
     </resultMap>
+
+    <select id="getAllUser"  resultMap="BaseResultMap">
+          select * from smbms_user;
+    </select>
+
     <select id="getUserList"  resultMap="BaseResultMap">
-        select * from smbms_user
+         select a.*,b.roleName from smbms_user as a,smbms_role as b where userName like #{queryUserName} and userRole like if(#{queryUserRole}=0,'%',#{queryUserRole}) and userRole=b.id limit #{start},#{pageSize}
+    </select>
+
+    <select id="getUserById" resultMap="BaseResultMap">
+         select * from smbms_user where id=${id}
     </select>
 
     <select id="login"  resultMap="BaseResultMap" >
   select * from smbms_user where userCode = #{userCode} AND userPassword = #{userPassword}
   </select>
+
+    <select id="getUserCount" resultType="int">
+        select count(*) from smbms_user where userName like #{queryUserName} and userRole like if(#{queryUserRole}=0,'%',#{queryUserRole})
+    </select>
+
+    <!--插入用户-->
+    <insert id="insertUser" parameterType="pojo.User">
+        insert into smbms_user (userCode,userName,userPassword,gender,birthday,phone,address,userRole,createdBy,creationDate,modifyBy,modifyDate)
+        values(#{user.userCode}, #{user.userName}, #{user.userPassword}, #{user.gender}, #{user.birthday},#{user.phone},#{user.address},#{user.userRole}
+        ,#{user.createdBy},#{user.creationDate},#{user.modifyBy},#{user.modifyDate})
+    </insert>
+
+    <!--简单的插入用户-->
+    <!--<insert id="insertUser" parameterType="pojo.User">
+        insert into smbms_user (userCode,userName,userPassword)
+        values(#{user.userCode}, #{user.userName}, #{user.userPassword})
+    </insert>-->
+    <!--修改用户-->
+
+    <!--修改用户-->
+    <update id="updateUser" >
+      UPDATE smbms_user set userCode=#{user.userCode},
+      userName=#{user.userName},userPassword=#{user.userPassword} where id=#{id}
+    </update>
+
+    <!--删除用户-->
+    <delete id="deleteUserById">
+        delete from smbms_user where id=#{id}
+    </delete>
+
+
 </mapper>

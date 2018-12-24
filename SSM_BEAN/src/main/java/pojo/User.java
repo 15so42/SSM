@@ -39,23 +39,47 @@ public class User {
         this.modifyBy = modifyBy;
         this.modifyDate = modifyDate;
     }
+
+    public User(String userCode,String userName,String userPassword,Integer gender,Date birthday,String phone,
+                String address,Integer userRole,Integer createdBy,Date creationDate,Integer modifyBy,Date modifyDate){
+
+        this.userCode = userCode;
+        this.userName = userName;
+        this.userPassword = userPassword;
+        this.gender = gender;
+        this.birthday = birthday;
+        this.phone = phone;
+        this.address = address;
+        this.userRole = userRole;
+        this.createdBy = createdBy;
+        this.creationDate = creationDate;
+        this.modifyBy = modifyBy;
+        this.modifyDate = modifyDate;
+    }
+    public User(String userCode,String userName,String userPassword){
+        this.userCode = userCode;
+        this.userName = userName;
+        this.userPassword = userPassword;
+    }
+
+
     public String getUserRoleName() {
         return userRoleName;
     }
     public void setUserRoleName(String userRoleName) {
         this.userRoleName = userRoleName;
     }
-    public Integer getAge() {
-		/*long time = System.currentTimeMillis()-birthday.getTime();
-		Integer age = Long.valueOf(time/365/24/60/60/1000).IntegerValue();*/
-        Date date = new Date();
-        Integer age = date.getYear()-birthday.getYear();
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
+//    public Integer getAge() {
+//		/*long time = System.currentTimeMillis()-birthday.getTime();
+//		Integer age = Long.valueOf(time/365/24/60/60/1000).IntegerValue();*/
+//        Date date = new Date();
+//        Integer age = date.getYear()-birthday.getYear();
+//        return age;
+//    }
+//
+//    public void setAge(Integer age) {
+//        this.age = age;
+//    }
 
     public Integer getId() {
         return id;

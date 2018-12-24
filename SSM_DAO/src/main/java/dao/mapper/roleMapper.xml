@@ -10,7 +10,10 @@
         <result column="modifyBy" jdbcType="BIGINT" property="modifyBy" />
         <result column="modifyDate" jdbcType="TIMESTAMP" property="modifyDate" />
     </resultMap>
+
+
    <select id="getRoleList" resultMap="BaseResultMap">
        select id,roleCode,roleName,createdBy,creationDate,modifyBy,modifyDate from smbms_role
    </select>
+
 </mapper>
